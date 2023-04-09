@@ -1,12 +1,49 @@
-*, * * {
+*, * *, * * * {
   box-sizing: border-box;
 }
 
 body {
-  margin: 3rem;
+  margin: 0;
   font-family: sans-serif;
 }
 
-p {
-  font-size: 2rem;
+button {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.75rem 1rem;
+}
+
+main {
+  margin: 1rem;
+  margin-bottom: 5rem;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.plant-container {
+  border: 0.1rem solid black;
+  border-radius: 0.5rem;
+  background-color: #ffffff22;
+  padding: 1rem;
+}
+
+#plant-list-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+footer {
+  position: fixed;
+  background-color: black;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 5rem;
+  display: flex;
+  padding: 0 1rem;
+  align-items: center;
+  justify-content: center;
 }
