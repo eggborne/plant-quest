@@ -36,8 +36,7 @@ console.log('index.js run');
 window.onload = function () {
   console.log('loaded');
   document.getElementById('add-plant-button').addEventListener('click', (e) => {
-    console.log('clicked add');
-    addPlant(2);
+    addPlant(1);
   });
   // This function has side effects because we are manipulating the DOM.
   // Manipulating the DOM will always be a side effect. 
@@ -86,16 +85,34 @@ window.onload = function () {
 
 const addPlant = (newId) => {
   console.log('Adding plant with ID', newId);
-  document.getElementById('plant-list-area').innerHTML += `
-    <div id="plant-${newId}" class="plant-container">
-      <h1>Plant ID ${newId}</h1>
-      <button class="feed" id="feed-${newId}">Add food</button>
-      <button class="feed" id="bluefood-${newId}">Add blue food</button>
-      <button class="water" id="hydrate-${newId}">Hydrate</button>
-      <button class="water" id="superWater-${newId}">Super Water</button>
-      <button class="showstate" id="show-state-${newId}">Current Stats</button>
-      <h3><div id="soil-value">0</div></h3>
-      <h3><div id="water-value">0</div></h3>
-    </div>
+  const newPlant = document.createElement('div');
+  newPlant.classList.add('plant-container');
+  newPlant.id = `plant-${newId}`;
+  newPlant.innerHTML = `
+    <h1>Plant ID ${newId}</h1>
+    <button class="feed" id="feed-${newId}">Add food</button>
+    <button class="feed" id="bluefood-${newId}">Add blue food</button>
+    <button class="water" id="hydrate-${newId}">Hydrate</button>
+    <button class="water" id="superWater-${newId}">Super Water</button>
+    <button class="showstate" id="show-state-${newId}">Current Stats</button>
+    <h3><div id=soil-value-${newId}>0</div></h3>
+    <h3><div id=water-value-${newId}>0</div></h3>
   `;
+  document.getElementById('plant-list-area').append(newPlant);
+  document.getElementById(`feed-${newId}`).onclick = function () {
+    const newState = stateControl(feed);
+    document.getElementById(`soil-value-${newId}`).innerText = `Soil: ${newState.soil}`;
+  };
+  document.getElementById(`bluefood-${newId}`).onclick = function () {
+    const newState = stateControl(blueFood);
+    document.getElementById(`soil-value-${newId}`).innerText = `Soil: ${newState.soil}`;
+  };
+  document.getElementById(`hydrate-${newId}`).onclick = function () {
+    const newState = stateControl(hydrate);
+    document.getElementById(`water-value-${newId}`).innerText = `Water: ${newState.water}`;
+  };
+  document.getElementById(`superWater-${newId}`).onclick = function () {
+    const newState = stateControl(superWater);
+    document.getElementById(`water-value-${newId}`).innerText = `Water: ${newState.water}`;
+  };
 };
