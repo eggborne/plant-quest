@@ -1,5 +1,9 @@
 import './css/style.css';
 
+let plantCount = 0;
+
+const plants = [];
+
 // This function stores our state.
 const storeState = () => {
   let currentState = {};
@@ -16,12 +20,28 @@ const stateControl = storeState();
 // We can easily create more specific functions that 
 // alter a plant's soil, water, and light to varying degrees.
 const changeState = (prop) => {
+  console.log('changeState prop: ' + prop);
   return (value) => {
+    console.log('changeState value: ' + value);
     return (state) => ({
       ...state,
       [prop]: (state[prop] || 0) + value
     });
   };
+};
+
+const canBeWatered = (plant) =>( {
+  hydrate: () => changeState("water")(1),
+});
+const canBeFed = (plant) =>( {
+  feed: () => changeState("soil")(1),
+});
+
+const createPlant = (id) => {
+  let plant = {
+    id
+  };
+  return { ...plant, ...canBeWatered(plant)};
 };
 
 // We create four functions using our function factory. 
@@ -36,23 +56,24 @@ console.log('index.js run');
 window.onload = function () {
   console.log('loaded');
   document.getElementById('add-plant-button').addEventListener('click', (e) => {
-    addPlant(1);
+
+    addPlant();
   });
   // This function has side effects because we are manipulating the DOM.
   // Manipulating the DOM will always be a side effect. 
   // Note that we only use one of our functions to alter soil. 
   // You can easily add more.
 
-  [...document.getElementsByClassName('feed')].forEach(but => {
-    but.addEventListener('click', (e) => {
-      console.log('clicked', e.target.id);
-    });
-  });
-  [...document.getElementsByClassName('water')].forEach(but => {
-    but.addEventListener('click', (e) => {
-      console.log('clicked', e.target.id);
-    });
-  });
+  // [...document.getElementsByClassName('feed')].forEach(but => {
+  //   but.addEventListener('click', (e) => {
+  //     console.log('clicked', e.target.id);
+  //   });
+  // });
+  // [...document.getElementsByClassName('water')].forEach(but => {
+  //   but.addEventListener('click', (e) => {
+  //     console.log('clicked', e.target.id);
+  //   });
+  // });
   // document.getElementById('feed').onclick = function () {
   //   const newState = stateControl(feed);
   //   document.getElementById('soil-value').innerText = `Soil: ${newState.soil}`;
@@ -75,15 +96,17 @@ window.onload = function () {
   // (which the DOM is holding anyway). 
   // However, students often do need the ability to see the current state 
   // without changing it so it's included here for reference.
-  document.getElementById('show-state').onclick = function () {
-    // We just need to call stateControl() without arguments 
-    // to see our current state.
-    const currentState = stateControl();
-    document.getElementById('soil-value').innerText = `Soil: ${currentState.soil}`;
-  };
+  // document.getElementById('show-state').onclick = function () {
+  //   // We just need to call stateControl() without arguments 
+  //   // to see our current state.
+  //   const currentState = stateControl();
+  //   document.getElementById('soil-value').innerText = `Soil: ${currentState.soil}`;
+  // };
 };
 
-const addPlant = (newId) => {
+const addPlant = () => {
+  let newId = plants.length;
+
   console.log('Adding plant with ID', newId);
   const newPlant = document.createElement('div');
   newPlant.classList.add('plant-container');
@@ -95,24 +118,36 @@ const addPlant = (newId) => {
     <button class="water" id="hydrate-${newId}">Hydrate</button>
     <button class="water" id="superWater-${newId}">Super Water</button>
     <button class="showstate" id="show-state-${newId}">Current Stats</button>
-    <h3><div id=soil-value-${newId}>0</div></h3>
-    <h3><div id=water-value-${newId}>0</div></h3>
+    <h3><div id="soil-value-${newId}">0</div></h3>
+    <h3><div id="water-value-${newId}">0</div></h3>
   `;
   document.getElementById('plant-list-area').append(newPlant);
-  document.getElementById(`feed-${newId}`).onclick = function () {
+  document.getElementById(`feed-${newId}`).onclick = function (e) {
+    console.log('clicked', e.target.id);
     const newState = stateControl(feed);
     document.getElementById(`soil-value-${newId}`).innerText = `Soil: ${newState.soil}`;
   };
-  document.getElementById(`bluefood-${newId}`).onclick = function () {
+  document.getElementById(`bluefood-${newId}`).onclick = function (e) {
+    console.log('clicked', e.target.id);
     const newState = stateControl(blueFood);
     document.getElementById(`soil-value-${newId}`).innerText = `Soil: ${newState.soil}`;
   };
-  document.getElementById(`hydrate-${newId}`).onclick = function () {
+  document.getElementById(`hydrate-${newId}`).onclick = function (e) {
+    console.log('clicked', e.target.id);
     const newState = stateControl(hydrate);
     document.getElementById(`water-value-${newId}`).innerText = `Water: ${newState.water}`;
   };
-  document.getElementById(`superWater-${newId}`).onclick = function () {
+  document.getElementById(`superWater-${newId}`).onclick = function (e) {
+    console.log('clicked', e.target.id);
     const newState = stateControl(superWater);
     document.getElementById(`water-value-${newId}`).innerText = `Water: ${newState.water}`;
   };
+  document.getElementById(`show-state-${newId}`).onclick = function () {
+    // We just need to call stateControl() without arguments 
+    // to see our current state.
+    const currentState = stateControl();
+    document.getElementById(`soil-value-${newId}`).innerText = `Soil: ${currentState.soil}`;
+    document.getElementById(`water-value-${newId}`).innerText = `Water: ${currentState.water}`;
+  };
+  plants.push(createPlant(newId));
 };
